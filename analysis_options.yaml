@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Desabilitar avisos de performance que não são críticos
+    prefer_const_constructors: false
+    prefer_const_literals_to_create_immutables: false
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    # Excluir arquivos do SDK Flutter para evitar erros internos
+    - "flutter/**"
+    - "**/flutter_tools/**"
+    - "**/widget_preview_scaffold/**"
+    - "**/test/**/widget_preview_scaffold/**"
