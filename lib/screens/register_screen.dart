@@ -105,16 +105,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.arrow_back_ios, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 const Text('voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
               ],
             ),
@@ -244,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: InputDecoration(
           hintText: '000.000.000-00',
           hintStyle: TextStyle(color: Colors.grey[400]),
-          prefixIcon: const Icon(Icons.credit_card, color: Colors.green),
+          prefixIcon: const Icon(Icons.badge, color: Colors.green),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,

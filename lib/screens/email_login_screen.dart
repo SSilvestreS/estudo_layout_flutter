@@ -100,16 +100,17 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.arrow_back_ios, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 const Text('voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
               ],
             ),

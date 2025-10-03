@@ -59,55 +59,32 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: Text(
-                  'GB',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'GAMERS BRAWL',
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Center(
+            child: Text(
+              'GB',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ],
+          ),
         ),
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.arrow_back_ios, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
-                const Text('voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
-              ],
-            ),
+        const SizedBox(width: 12),
+        const Text(
+          'GAMERS BRAWL',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],
@@ -377,29 +354,152 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'the game',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 24,
-                  fontStyle: FontStyle.italic,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(height: 20),
+            Column(
+              children: [
+                Text(
+                  'the game',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 24,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'FOR GAMERS',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+                const SizedBox(height: 8),
+                const Text(
+                  'FOR GAMERS',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
                 ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildWebsiteButton(),
+                  const SizedBox(width: 16),
+                  _buildInstagramButton(),
+                  const SizedBox(width: 16),
+                  _buildDiscordSocialButton(),
+                ],
               ),
-            ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWebsiteButton() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () async {
+            final Uri websiteUrl = Uri.parse('https://www.gamersbrawl.com/');
+            if (await canLaunchUrl(websiteUrl)) {
+              await launchUrl(websiteUrl, mode: LaunchMode.externalApplication);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Não foi possível abrir o site'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: const Center(
+            child: Icon(Icons.language, color: Colors.white, size: 20),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInstagramButton() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () async {
+            final Uri instagramUrl = Uri.parse('https://www.instagram.com/gamersbrawloficial/');
+            if (await canLaunchUrl(instagramUrl)) {
+              await launchUrl(instagramUrl, mode: LaunchMode.externalApplication);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Não foi possível abrir o Instagram'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: const Center(
+            child: Icon(Icons.camera_alt, color: Colors.white, size: 20),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDiscordSocialButton() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () async {
+            final Uri discordUrl = Uri.parse('https://discord.gg/nVFA9xmHNN');
+            if (await canLaunchUrl(discordUrl)) {
+              await launchUrl(discordUrl, mode: LaunchMode.externalApplication);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Não foi possível abrir o Discord'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: Center(
+            child: Image.asset(
+              'assets/images/discord_social_icon.png',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.gamepad, color: Colors.white, size: 20);
+              },
+            ),
           ),
         ),
       ),
