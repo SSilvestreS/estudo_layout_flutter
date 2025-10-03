@@ -111,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: TextField(
         controller: _emailController,
+        onChanged: (value) => setState(() {}), // Atualiza o estado quando o texto muda
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Seu e-mail',
@@ -129,48 +130,70 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildContinueButton() {
+    bool canContinue = _emailController.text.trim().isNotEmpty && _emailController.text.contains('@');
+    
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () {
-          if (_emailController.text.trim().isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EmailLoginScreen(email: _emailController.text.trim()),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Por favor, digite seu e-mail'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
+        onPressed: canContinue ? _validarEContinuar : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
+          backgroundColor: canContinue ? Colors.green : Colors.grey[400],
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'CONTINUAR',
               style: TextStyle(
-                color: Colors.white,
+                color: canContinue ? Colors.white : Colors.grey[600],
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+            Icon(
+              Icons.arrow_forward, 
+              color: canContinue ? Colors.white : Colors.grey[600], 
+              size: 20
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _validarEContinuar() {
+    String email = _emailController.text.trim();
+    
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, digite seu e-mail'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!email.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, insira um e-mail válido'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Se chegou até aqui, o e-mail é válido
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmailLoginScreen(email: email),
       ),
     );
   }

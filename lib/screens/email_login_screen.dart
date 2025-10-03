@@ -140,6 +140,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       ),
       child: TextField(
         controller: _emailController,
+        onChanged: (value) => setState(() {}), // Atualiza o estado quando o texto muda
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Seu e-mail',
@@ -166,6 +167,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
       ),
       child: TextField(
         controller: _passwordController,
+        onChanged: (value) => setState(() {}), // Atualiza o estado quando o texto muda
         obscureText: true,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -204,32 +206,33 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
   }
 
   Widget _buildLoginButton() {
+    bool canLogin = _emailController.text.trim().isNotEmpty && 
+                   _passwordController.text.trim().isNotEmpty &&
+                   _emailController.text.contains('@');
+    
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Login realizado com sucesso!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        },
+        onPressed: canLogin ? _validarEFazerLogin : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
+          backgroundColor: canLogin ? Colors.green : Colors.grey[400],
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check, color: Colors.white, size: 20),
+            Icon(
+              Icons.check, 
+              color: canLogin ? Colors.white : Colors.grey[600], 
+              size: 20
+            ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
               'ENTRAR',
               style: TextStyle(
-                color: Colors.white,
+                color: canLogin ? Colors.white : Colors.grey[600],
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
@@ -237,6 +240,59 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _validarEFazerLogin() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, digite seu e-mail'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!email.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, insira um e-mail válido'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, digite sua senha'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A senha deve ter pelo menos 6 caracteres'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Se chegou até aqui, os dados são válidos
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Login realizado com sucesso!'),
+        backgroundColor: Colors.green,
       ),
     );
   }

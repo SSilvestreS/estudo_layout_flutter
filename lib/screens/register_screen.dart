@@ -10,11 +10,17 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _aceitaTermos = false;
   bool _maiorIdade = false;
+  final _emailController = TextEditingController();
+  final _usuarioController = TextEditingController();
+  final _senhaController = TextEditingController();
   final _cpfController = TextEditingController();
   final _dataController = TextEditingController();
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _usuarioController.dispose();
+    _senhaController.dispose();
     _cpfController.dispose();
     _dataController.dispose();
     super.dispose();
@@ -37,6 +43,77 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (numeros.length <= 2) return numeros;
     if (numeros.length <= 4) return '${numeros.substring(0, 2)}/${numeros.substring(2)}';
     return '${numeros.substring(0, 2)}/${numeros.substring(2, 4)}/${numeros.substring(4)}';
+  }
+
+  bool _validarCampos() {
+    return _emailController.text.trim().isNotEmpty &&
+           _usuarioController.text.trim().isNotEmpty &&
+           _senhaController.text.trim().isNotEmpty &&
+           _cpfController.text.trim().isNotEmpty &&
+           _dataController.text.trim().isNotEmpty &&
+           _aceitaTermos &&
+           _maiorIdade;
+  }
+
+  void _validarECriarConta() {
+    if (!_validarCampos()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha todos os campos obrigatórios e aceite os termos.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Validações específicas
+    if (_emailController.text.trim().isEmpty || !_emailController.text.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, insira um e-mail válido.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_senhaController.text.trim().length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A senha deve ter pelo menos 6 caracteres.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_cpfController.text.replaceAll(RegExp(r'[^0-9]'), '').length != 11) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, insira um CPF válido.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_dataController.text.replaceAll(RegExp(r'[^0-9]'), '').length != 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, insira uma data válida.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Se chegou até aqui, todos os campos estão válidos
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Conta criada com sucesso!'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
@@ -140,15 +217,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildField('usuario@email.com', Icons.email),
+          _buildField('usuario@email.com', Icons.email, controller: _emailController),
           const SizedBox(height: 16),
           _buildDateField(),
           const SizedBox(height: 16),
-          _buildField('Usuário', Icons.person),
+          _buildField('Usuário', Icons.person, controller: _usuarioController),
           const SizedBox(height: 16),
           _buildCpfField(),
           const SizedBox(height: 16),
-          _buildField('Sua senha', Icons.lock, obscureText: true),
+          _buildField('Sua senha', Icons.lock, obscureText: true, controller: _senhaController),
           const SizedBox(height: 24),
           _buildCheckbox('Concordo com os Termos de Serviço e a Política de Privacidade', _aceitaTermos, (value) => setState(() => _aceitaTermos = value)),
           const SizedBox(height: 16),
@@ -160,7 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildField(String hint, IconData icon, {bool obscureText = false}) {
+  Widget _buildField(String hint, IconData icon, {bool obscureText = false, TextEditingController? controller}) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
@@ -168,6 +245,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         border: Border.all(color: Colors.grey.withOpacity(0.3)),
       ),
       child: TextField(
+        controller: controller,
+        onChanged: (value) => setState(() {}), // Atualiza o estado quando o texto muda
         obscureText: obscureText,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -205,6 +284,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               selection: TextSelection.collapsed(offset: formatted.length),
             );
           }
+          setState(() {}); // Atualiza o estado quando o texto muda
         },
         decoration: InputDecoration(
           hintText: 'DD/MM/AAAA',
@@ -241,6 +321,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               selection: TextSelection.collapsed(offset: formatted.length),
             );
           }
+          setState(() {}); // Atualiza o estado quando o texto muda
         },
         decoration: InputDecoration(
           hintText: '000.000.000-00',
@@ -288,19 +369,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildCreateButton() {
-    bool canCreate = _aceitaTermos && _maiorIdade;
+    bool canCreate = _validarCampos();
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: canCreate ? () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Conta criada com sucesso!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } : null,
+        onPressed: canCreate ? _validarECriarConta : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: canCreate ? Colors.green : Colors.grey[400],
           elevation: 0,
