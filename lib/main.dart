@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'screens/login_screen.dart';
 
-void main() => runApp(const GamersBrawlApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+  runApp(const GamersBrawlApp());
+}
 
 class GamersBrawlApp extends StatelessWidget {
   const GamersBrawlApp({super.key});
