@@ -19,13 +19,6 @@ class AppConstants {
   
   // Espaçamentos
   static const EdgeInsets defaultPadding = EdgeInsets.all(40.0);
-  static const EdgeInsets smallPadding = EdgeInsets.all(20.0);
-  static const EdgeInsets tinyPadding = EdgeInsets.all(8.0);
-  
-  // URLs
-  static const String websiteUrl = 'https://gamersbrawl.com.br';
-  static const String instagramUrl = 'https://www.instagram.com/gamersbrawloficial/';
-  static const String discordUrl = 'https://discord.gg/gamersbrawl';
   
   // Assets
   static const String logoPath = 'assets/images/logo_gamersbrawl.png';
