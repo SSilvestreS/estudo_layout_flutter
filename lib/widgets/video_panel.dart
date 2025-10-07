@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import '../constants/app_constants.dart';
+import '../services/url_service.dart';
 
-/// Componente reutilizável para painel de vídeo com texto e ícones sociais
 class VideoPanel extends StatefulWidget {
   final List<SocialIconData> socialIcons;
   final VoidCallback? onIconTap;
@@ -18,39 +16,50 @@ class VideoPanel extends StatefulWidget {
   State<VideoPanel> createState() => _VideoPanelState();
 }
 
-class _VideoPanelState extends State<VideoPanel> {
-  late final Player _player;
-  late final VideoController _videoController;
-  bool _isVideoLoaded = false;
+class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
+  // TODO: Adicionar vídeo futuramente
+  // Player? _mediaKitPlayer;
+  // VideoController? _mediaKitVideoController;
+  // VideoPlayerController? _videoPlayerController;
+  // bool _isVideoLoaded = false;
+  
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
-    _initializeVideo();
+    _initializeAnimation();
   }
 
-  Future<void> _initializeVideo() async {
-    try {
-      _player = Player();
-      _videoController = VideoController(_player);
-      await _player.open(Media(AppConstants.videoPath));
-      await _player.setPlaylistMode(PlaylistMode.loop);
-      await _player.setVolume(0.0);
-      await _player.play();
-      
-      if (mounted) {
-        setState(() {
-          _isVideoLoaded = true;
-        });
-      }
-    } catch (e) {
-      debugPrint('Erro ao carregar vídeo: $e');
-    }
+  void _initializeAnimation() {
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    );
+    
+    _colorAnimation = ColorTween(
+      begin: AppConstants.primaryBackground,
+      end: const Color(0xFF2D1B69),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _animationController.repeat(reverse: true);
   }
+
+  // TODO: Implementar carregamento de vídeo futuramente
+  // Future<void> _initializeVideo() async {
+  //   // Implementação do vídeo será adicionada aqui
+  // }
 
   @override
   void dispose() {
-    _player.dispose();
+    _animationController.dispose();
+    // TODO: Dispose dos controllers de vídeo quando implementado
+    // _mediaKitPlayer?.dispose();
+    // _videoPlayerController?.dispose();
     super.dispose();
   }
 
@@ -61,17 +70,17 @@ class _VideoPanelState extends State<VideoPanel> {
         final panelWidth = constraints.maxWidth;
         final panelHeight = constraints.maxHeight;
         
-        // Calcular posições baseadas em porcentagens para manter proporções
-        final textLeft = panelWidth * 0.12;
+        
+        final textLeft = panelWidth * 0.18; 
         final textTop1 = panelHeight * 0.71;
         final textTop2 = panelHeight * 0.76;
-        final iconsTop = panelHeight * 0.84;
+        final iconsTop = panelHeight * 0.87; 
         
         return Stack(
           children: [
-            // Vídeo/imagem de fundo
+            // Fundo animado (futuramente será vídeo)
             Positioned.fill(
-              child: _isVideoLoaded ? _buildVideoPanel() : _buildLoadingPanel(),
+              child: _buildAnimatedPanel(),
             ),
             // Texto "the game"
             Positioned(
@@ -81,7 +90,7 @@ class _VideoPanelState extends State<VideoPanel> {
                 AppConstants.gameText,
                 style: TextStyle(
                   color: AppConstants.textWhite,
-                  fontSize: 28,
+                  fontSize: 36, // Aumentado de 28 para 36
                   fontStyle: FontStyle.italic,
                   shadows: [Shadow(offset: Offset(0, 1), blurRadius: 3, color: Colors.black54)],
                 ),
@@ -95,7 +104,7 @@ class _VideoPanelState extends State<VideoPanel> {
                 AppConstants.gamersText,
                 style: TextStyle(
                   color: AppConstants.accentGreen,
-                  fontSize: 36,
+                  fontSize: 48, // Aumentado de 36 para 48
                   fontWeight: FontWeight.bold,
                   shadows: [Shadow(offset: Offset(0, 2), blurRadius: 4, color: Colors.black87)],
                 ),
@@ -117,7 +126,7 @@ class _VideoPanelState extends State<VideoPanel> {
                         if (widget.onIconTap != null) {
                           widget.onIconTap!();
                         }
-                        _showMessage(iconData.message);
+                        _handleIconTap(iconData);
                       },
                     ),
                   );
@@ -130,46 +139,24 @@ class _VideoPanelState extends State<VideoPanel> {
     );
   }
 
-  Widget _buildVideoPanel() {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Video(
-            controller: _videoController,
-            fit: BoxFit.cover,
-            controls: NoVideoControls,
-          ),
-        ),
-        Container(
+
+  Widget _buildAnimatedPanel() {
+    return AnimatedBuilder(
+      animation: _colorAnimation,
+      builder: (context, child) {
+        return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
               colors: [
-                Colors.transparent,
-                Colors.black.withValues(alpha: 0.3),
+                _colorAnimation.value ?? AppConstants.primaryBackground,
+                const Color(0xFF2D1B69),
               ],
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingPanel() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppConstants.primaryBackground, Color(0xFF2D1B69)],
-        ),
-      ),
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: AppConstants.accentGreen,
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -181,9 +168,23 @@ class _VideoPanelState extends State<VideoPanel> {
       ),
     );
   }
+
+  void _handleIconTap(SocialIconData iconData) {
+    
+    if (iconData.icon == Icons.camera_alt) {
+      UrlService.openInstagram();
+    } 
+    
+    else if (iconData.icon == Icons.gamepad || iconData.imagePath != null) {
+      UrlService.openDiscord();
+    } 
+    else {
+      
+      _showMessage(iconData.message);
+    }
+  }
 }
 
-/// Componente para ícone social individual
 class SocialIcon extends StatelessWidget {
   final IconData? icon;
   final String? imagePath;
@@ -201,11 +202,11 @@ class SocialIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppConstants.socialIconSize,
-      height: AppConstants.socialIconSize,
+      width: 50, 
+      height: 50,
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(AppConstants.socialIconSize / 2),
+        borderRadius: BorderRadius.circular(25), // 50/2
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.3),
         ),
@@ -213,25 +214,26 @@ class SocialIcon extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(AppConstants.socialIconSize / 2),
+          borderRadius: BorderRadius.circular(25), // 50/2
           onTap: onTap,
           child: Center(
             child: imagePath != null
                 ? Image.asset(
                     imagePath!,
-                    width: AppConstants.iconSize,
-                    height: AppConstants.iconSize,
+                    width: 28, 
+                    height: 28, 
                     fit: BoxFit.contain,
+                    alignment: Alignment.center, 
                     errorBuilder: (_, __, ___) => Icon(
                       fallbackIcon ?? Icons.link,
                       color: AppConstants.textWhite,
-                      size: AppConstants.iconSize,
+                      size: 28, 
                     ),
                   )
                 : Icon(
                     icon,
                     color: AppConstants.textWhite,
-                    size: AppConstants.iconSize,
+                    size: 28, 
                   ),
           ),
         ),
@@ -240,7 +242,6 @@ class SocialIcon extends StatelessWidget {
   }
 }
 
-/// Classe de dados para ícones sociais
 class SocialIconData {
   final IconData? icon;
   final String? imagePath;

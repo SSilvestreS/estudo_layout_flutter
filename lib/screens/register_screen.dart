@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import '../mixins/validation_mixin.dart';
 import '../widgets/app_components.dart';
 import '../widgets/app_header.dart';
-import '../mixins/validation_mixin.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -99,13 +99,13 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
       children: [
         _buildEmailField(),
         const SizedBox(height: 20),
-        _buildUsuarioField(),
+        _buildNameField(),
         const SizedBox(height: 20),
-        _buildSenhaField(),
+        _buildPasswordField(),
         const SizedBox(height: 20),
         _buildCpfField(),
         const SizedBox(height: 20),
-        _buildDataField(),
+        _buildDateField(),
       ],
     );
   }
@@ -127,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildUsuarioField() {
+  Widget _buildNameField() {
     return SizedBox(
       width: 300,
       child: AppTextField(
@@ -143,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildSenhaField() {
+  Widget _buildPasswordField() {
     return SizedBox(
       width: 300,
       child: AppTextField(
@@ -185,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildDataField() {
+  Widget _buildDateField() {
     return SizedBox(
       width: 300,
       child: AppTextField(

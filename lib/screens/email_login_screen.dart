@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
-import '../widgets/app_components.dart';
+import '../mixins/validation_mixin.dart';
 import '../widgets/app_header.dart';
 import '../widgets/video_panel.dart';
-import '../mixins/validation_mixin.dart';
 import 'forgot_password_screen.dart';
 
 class EmailLoginScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class EmailLoginScreen extends StatefulWidget {
 class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixin {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
-  bool _isEmailValid = false;
   bool _isPasswordValid = false;
 
   @override
@@ -26,7 +24,6 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
     super.initState();
     _emailController = TextEditingController(text: widget.email);
     _passwordController = TextEditingController();
-    _isEmailValid = validateEmail(widget.email) == null;
   }
 
   @override
@@ -120,11 +117,14 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
       color: AppConstants.primaryBackground,
       child: Stack(
         children: [
-          Positioned(left: 60, top: 100, child: const AppHeader(showBackButton: true)),
-          Positioned(left: 60, top: 200, child: _buildEmailField()),
-          Positioned(left: 60, top: 280, child: _buildPasswordField()),
-          Positioned(left: 60, top: 360, child: _buildForgotPasswordLink()),
-          Positioned(left: 60, top: 400, child: _buildLoginButton()),
+          // Botão voltar - Lado direito da tela
+          Positioned(right: 60, top: 80, child: _buildBackButton()),
+          // Logo - Posição: x: 60 px, y: 140 px (mesmo que tela inicial)
+          Positioned(left: 60, top: 140, child: _buildLogoOnly()),
+          Positioned(left: 60, top: 320, child: _buildEmailField()),
+          Positioned(left: 60, top: 390, child: _buildPasswordField()),
+          Positioned(left: 60, top: 460, child: _buildForgotPasswordLink()),
+          Positioned(left: 60, top: 500, child: _buildLoginButton()),
         ],
       ),
     );
@@ -136,66 +136,189 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildBackButton() {
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.arrow_back_ios, color: AppConstants.textWhite, size: 16),
+            SizedBox(width: 6),
+            Text(
+              'voltar',
+              style: TextStyle(color: AppConstants.textWhite, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoOnly() {
     return SizedBox(
-      width: 300,
-      child: AppTextField(
-        controller: _emailController,
-        hintText: 'Digite seu e-mail',
-        prefixIcon: Icons.email,
-        keyboardType: TextInputType.emailAddress,
-        onChanged: (value) {
-          setState(() {
-            _isEmailValid = validateEmail(value) == null;
-          });
+      width: 260,
+      height: 65,
+      child: Image.asset(
+        'assets/images/logo_gamersbrawl.png',
+        height: 65,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              color: AppConstants.accentGreen,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: Text(
+                'GB',
+                style: TextStyle(
+                  color: AppConstants.primaryBackground,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
+  Widget _buildEmailField() {
+    return Container(
+      width: 350,
+      height: 55,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: _emailController,
+        enabled: false,
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 17,
+        ),
+        decoration: InputDecoration(
+          hintText: 'Digite seu e-mail',
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 17,
+          ),
+          prefixIcon: const Icon(
+            Icons.email,
+            color: AppConstants.textLightGray,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+
   Widget _buildPasswordField() {
-    return SizedBox(
-      width: 300,
-      child: AppTextField(
+    return Container(
+      width: 350,
+      height: 55,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
         controller: _passwordController,
-        hintText: 'Digite sua senha',
-        prefixIcon: Icons.lock,
         obscureText: true,
         onChanged: (value) {
           setState(() {
             _isPasswordValid = validatePassword(value) == null;
           });
         },
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 17,
+        ),
+        decoration: InputDecoration(
+          hintText: 'Digite sua senha',
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 17,
+          ),
+          prefixIcon: const Icon(
+            Icons.lock,
+            color: AppConstants.textLightGray,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
       ),
     );
   }
 
   Widget _buildForgotPasswordLink() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
-          );
-        },
-        child: const Text(
-          'Esqueci minha senha',
-          style: TextStyle(
-            color: AppConstants.textWhite,
-            fontSize: 14,
-            decoration: TextDecoration.underline,
-          ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+        );
+      },
+      child: const Text(
+        'Esqueci minha senha',
+        style: TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 14,
+          decoration: TextDecoration.underline,
         ),
       ),
     );
   }
 
   Widget _buildLoginButton() {
-    return AppButton(
-      text: 'ENTRAR',
-      onPressed: (_isEmailValid && _isPasswordValid) ? _handleLogin : null,
+    return SizedBox(
+      width: 180,
+      height: 45,
+      child: ElevatedButton(
+        onPressed: _isPasswordValid ? _handleLogin : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _isPasswordValid 
+              ? const Color(0xFF7BFF00) 
+              : const Color(0xFF555555),
+          foregroundColor: _isPasswordValid 
+              ? const Color(0xFF1A0033) 
+              : const Color(0xFF999999),
+          elevation: _isPasswordValid ? 2 : 0,
+          shadowColor: _isPasswordValid ? const Color(0xFF7BFF00).withValues(alpha: 0.3) : Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              color: _isPasswordValid 
+                  ? const Color(0xFF7BFF00) 
+                  : const Color(0xFF666666),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Text(
+          'ENTRAR',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: _isPasswordValid 
+                ? const Color(0xFF1A0033) 
+                : const Color(0xFF999999),
+          ),
+        ),
+      ),
     );
   }
 
@@ -226,14 +349,15 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
   }
 
   void _handleLogin() {
-    final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    
-    if (validateEmail(email) == null && validatePassword(password) == null) {
-      showSuccess(context, 'Login realizado com sucesso!');
-      // Aqui você pode adicionar a lógica de autenticação
+    if (validatePassword(password) == null) {
+      _showMessage('Login realizado com sucesso!');
     } else {
-      showError(context, 'Email ou senha inválidos');
+      showError(context, 'Senha inválida');
     }
+  }
+
+  void _showMessage(String message) {
+    showSuccess(context, message);
   }
 }

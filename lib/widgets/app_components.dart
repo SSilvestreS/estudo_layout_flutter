@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
-/// Componente reutilizável para campos de entrada de texto
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -71,7 +70,6 @@ class AppTextField extends StatelessWidget {
   }
 }
 
-/// Componente reutilizável para botões principais
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -126,7 +124,6 @@ class AppButton extends StatelessWidget {
   }
 }
 
-/// Componente reutilizável para botões sociais
 class SocialButton extends StatelessWidget {
   final IconData? icon;
   final String? imagePath;
@@ -198,7 +195,6 @@ class SocialButton extends StatelessWidget {
   }
 }
 
-/// Componente reutilizável para ícones sociais
 class SocialIcon extends StatelessWidget {
   final IconData? icon;
   final String? imagePath;

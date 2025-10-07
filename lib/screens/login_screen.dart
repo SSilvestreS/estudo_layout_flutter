@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
-import '../widgets/app_components.dart';
-import '../widgets/app_header.dart';
-import '../widgets/video_panel.dart';
 import '../mixins/validation_mixin.dart';
+import '../widgets/video_panel.dart';
 import 'email_login_screen.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -89,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppHeader(),
+        _buildLogoAndTitle(),
         const SizedBox(height: 40),
         _buildEmailField(),
         const SizedBox(height: 20),
@@ -97,9 +94,9 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         const SizedBox(height: 30),
         _buildDivider(),
         const SizedBox(height: 30),
-        _buildSocialButtons(),
-        const SizedBox(height: 30),
-        _buildCreateAccountLink(),
+        _buildGoogleButton(),
+        const SizedBox(height: 15),
+        _buildDiscordButton(),
       ],
     );
   }
@@ -110,12 +107,12 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
       color: AppConstants.primaryBackground,
       child: Stack(
         children: [
-          Positioned(left: 60, top: 100, child: const AppHeader()),
-          Positioned(left: 60, top: 200, child: _buildEmailField()),
-          Positioned(left: 60, top: 280, child: _buildContinueButton()),
-          Positioned(left: 60, top: 350, child: _buildDivider()),
-          Positioned(left: 60, top: 400, child: _buildSocialButtons()),
-          Positioned(left: 60, top: 500, child: _buildCreateAccountLink()),
+          Positioned(left: 60, top: 140, child: _buildLogoAndTitle()),
+          Positioned(left: 60, top: 320, child: _buildEmailField()),
+          Positioned(left: 60, top: 390, child: _buildContinueButton()),
+          Positioned(left: 60, top: 510, child: _buildDivider()),
+          Positioned(left: 60, top: 540, child: _buildGoogleButton()),
+          Positioned(left: 60, top: 585, child: _buildDiscordButton()),
         ],
       ),
     );
@@ -127,91 +124,211 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildLogoAndTitle() {
     return SizedBox(
-      width: 300,
-      child: AppTextField(
-        controller: _emailController,
-        hintText: 'Digite seu e-mail',
-        prefixIcon: Icons.email,
-        keyboardType: TextInputType.emailAddress,
-        onChanged: (value) {
-          setState(() {
-            _isEmailValid = validateEmail(value) == null;
-          });
+      width: 260,
+      height: 65,
+      child: Image.asset(
+        'assets/images/logo_gamersbrawl.png',
+        height: 65,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              color: AppConstants.accentGreen,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: Text(
+                'GB',
+                style: TextStyle(
+                  color: AppConstants.primaryBackground,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
+  Widget _buildEmailField() {
+    return Container(
+      width: 350,
+      height: 55, 
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: _emailController,
+        onChanged: (value) {
+          setState(() {
+            _isEmailValid = validateEmail(value) == null;
+          });
+        },
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 17,
+        ),
+        decoration: InputDecoration(
+          hintText: 'Digite seu e-mail',
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 17,
+          ),
+          prefixIcon: const Icon(
+            Icons.email,
+            color: AppConstants.textLightGray,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+
   Widget _buildContinueButton() {
-    return AppButton(
-      text: 'CONTINUAR',
-      onPressed: _isEmailValid ? _handleContinue : null,
+    return SizedBox(
+      width: 180,
+      height: 45,
+      child: ElevatedButton(
+        onPressed: _isEmailValid ? _handleContinue : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _isEmailValid 
+              ? const Color(0xFF7BFF00) 
+              : const Color(0xFF555555),
+          foregroundColor: _isEmailValid 
+              ? const Color(0xFF1A0033) 
+              : const Color(0xFF999999),
+          elevation: _isEmailValid ? 2 : 0,
+          shadowColor: _isEmailValid ? const Color(0xFF7BFF00).withValues(alpha: 0.3) : Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              color: _isEmailValid 
+                  ? const Color(0xFF7BFF00) 
+                  : const Color(0xFF666666),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Text(
+          'CONTINUAR',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: _isEmailValid 
+                ? const Color(0xFF1A0033) 
+                : const Color(0xFF999999),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildDivider() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: Colors.white.withValues(alpha: 0.3),
-          ),
+    return SizedBox(
+      width: 300,
+      child: const Text(
+        '— Ou use uma das opções abaixo —',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          color: Color(0xFFA0A0A0),
+          fontSize: 13,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'ou',
-            style: TextStyle(
-              color: AppConstants.textLightGray,
-              fontSize: 14,
+      ),
+    );
+  }
+
+  Widget _buildGoogleButton() {
+    return SizedBox(
+      width: 300,
+      height: 35,
+      child: ElevatedButton(
+        onPressed: () => _showMessage('Google em desenvolvimento'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              color: Colors.grey.withValues(alpha: 0.3),
+              width: 1,
             ),
           ),
         ),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: Colors.white.withValues(alpha: 0.3),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppConstants.googleIconPath,
+              width: 20,
+              height: 20,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.login, size: 20);
+              },
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Entrar com Google',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDiscordButton() {
+    return SizedBox(
+      width: 300,
+      height: 35,
+      child: ElevatedButton(
+        onPressed: () => _showMessage('Discord em desenvolvimento'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(
+              color: Colors.grey.withValues(alpha: 0.3),
+              width: 1,
+            ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildSocialButtons() {
-    return Column(
-      children: [
-        SocialButton(
-          icon: Icons.login,
-          label: 'Entrar com Google',
-          onTap: () => _showMessage('Google em desenvolvimento'),
-        ),
-        const SizedBox(height: 12),
-        SocialButton(
-          icon: Icons.gamepad,
-          label: 'Entrar com Discord',
-          onTap: () => _showMessage('Discord em desenvolvimento'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCreateAccountLink() {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const RegisterScreen()),
-        );
-      },
-      child: const Text(
-        'Criar conta',
-        style: TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 16,
-          decoration: TextDecoration.underline,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              AppConstants.discordButtonIconPath,
+              width: 20,
+              height: 20,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.gamepad, size: 20, color: Colors.black);
+              },
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Entrar com Discord',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );

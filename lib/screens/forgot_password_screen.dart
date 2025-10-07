@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import '../mixins/validation_mixin.dart';
 import '../widgets/app_components.dart';
 import '../widgets/app_header.dart';
 import '../widgets/video_panel.dart';
-import '../mixins/validation_mixin.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -104,10 +104,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
       color: AppConstants.primaryBackground,
       child: Stack(
         children: [
-          Positioned(left: 60, top: 100, child: const AppHeader(showBackButton: true)),
-          Positioned(left: 60, top: 200, child: _buildTitle()),
-          Positioned(left: 60, top: 300, child: _buildEmailField()),
-          Positioned(left: 60, top: 380, child: _buildSendButton()),
+          Positioned(right: 60, top: 80, child: _buildBackButton()),
+          Positioned(left: 60, top: 140, child: _buildLogoOnly()),
+          Positioned(left: 60, top: 250, child: _buildTitle()),
+          Positioned(left: 60, top: 320, child: _buildEmailField()),
+          Positioned(left: 60, top: 390, child: _buildSendButton()),
         ],
       ),
     );
@@ -116,6 +117,63 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
   Widget _buildRightPanel() {
     return VideoPanel(
       socialIcons: _getSocialIcons(),
+    );
+  }
+
+  Widget _buildBackButton() {
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.arrow_back_ios, color: AppConstants.textWhite, size: 16),
+            SizedBox(width: 6),
+            Text(
+              'voltar',
+              style: TextStyle(color: AppConstants.textWhite, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoOnly() {
+    return SizedBox(
+      width: 260,
+      height: 65,
+      child: Image.asset(
+        'assets/images/logo_gamersbrawl.png',
+        height: 65,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              color: AppConstants.accentGreen,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: Text(
+                'GB',
+                style: TextStyle(
+                  color: AppConstants.primaryBackground,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
-/// Componente reutilizável para o header com logo
 class AppHeader extends StatelessWidget {
   final bool showBackButton;
   final VoidCallback? onBackPressed;
@@ -17,13 +16,11 @@ class AppHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Logo
         Image.asset(
           AppConstants.logoPath,
           height: AppConstants.logoHeight,
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            // Fallback caso a imagem não carregue
             return Row(
               children: [
                 Container(
@@ -57,7 +54,6 @@ class AppHeader extends StatelessWidget {
             );
           },
         ),
-        // Botão voltar (se necessário)
         if (showBackButton)
           _buildBackButton(context),
       ],
