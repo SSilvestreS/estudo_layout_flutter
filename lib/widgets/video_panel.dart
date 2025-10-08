@@ -74,9 +74,9 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
         
         
         final textLeft = panelWidth * 0.18; 
-        final textTop1 = panelHeight * 0.71;
-        final textTop2 = panelHeight * 0.76;
-        final iconsTop = panelHeight * 0.87; 
+        final textTop1 = panelHeight * 0.55;
+        final textTop2 = panelHeight * 0.60;
+        final iconsTop = panelHeight * 0.72; 
         
         return Stack(
           children: [

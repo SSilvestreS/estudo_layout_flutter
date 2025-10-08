@@ -110,6 +110,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
       child: Stack(
         children: [
           Positioned(left: 60, top: 140, child: _buildLogoAndTitle()),
+          Positioned(left: 78, top: 285, child: _buildEmailLabel()),
           Positioned(left: 60, top: 320, child: _buildEmailField()),
           Positioned(left: 60, top: 390, child: _buildContinueButton()),
           Positioned(left: 60, top: 510, child: _buildDivider()),
@@ -130,10 +131,20 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
     return const custom.AppLogo();
   }
 
+  Widget _buildEmailLabel() {
+    return const Text(
+      'E-mail',
+      style: TextStyle(
+        color: AppConstants.textWhite,
+        fontSize: 16,
+      ),
+    );
+  }
+
   Widget _buildEmailField() {
     return Container(
-      width: 350,
-      height: 55, 
+      width: 380,
+      height: 48, 
       decoration: BoxDecoration(
         color: AppConstants.inputBackground,
         borderRadius: BorderRadius.circular(6),
@@ -147,13 +158,13 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
         },
         style: const TextStyle(
           color: AppConstants.textWhite,
-          fontSize: 17,
+          fontSize: 14,
         ),
         decoration: InputDecoration(
           hintText: 'Digite seu e-mail',
           hintStyle: const TextStyle(
             color: AppConstants.textLightGray,
-            fontSize: 17,
+            fontSize: 14,
           ),
           prefixIcon: const Icon(
             Icons.email,

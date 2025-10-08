@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../mixins/validation_mixin.dart';
+import '../widgets/app_components.dart';
 import '../widgets/action_button.dart' as custom;
 import '../widgets/social_button.dart';
 import '../widgets/video_panel.dart';
@@ -43,49 +44,29 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
+          final screenHeight = constraints.maxHeight;
           
-          if (screenWidth < 1200) {
-            return _buildResponsiveLayout();
+          const baseWidth = 1280.0;
+          const baseHeight = 400.0;
+          
+          if (screenWidth < baseWidth || screenHeight < baseHeight) {
+            return _buildScrollableLayout(baseWidth, baseHeight);
           } else {
-            return _buildFixedLayout();
+            return _buildFixedLayout(baseWidth, baseHeight);
           }
         },
       ),
     );
   }
 
-  Widget _buildResponsiveLayout() {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height,
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: AppConstants.defaultPadding,
-              child: _buildLeftPanelContent(),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: _buildRightPanel(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFixedLayout() {
+  Widget _buildScrollableLayout(double baseWidth, double baseHeight) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: baseWidth,
+          height: baseHeight,
           child: Row(
             children: [
               Expanded(flex: 520, child: _buildLeftPanel()),
@@ -97,14 +78,16 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildLeftPanelContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLogoAndTitle(),
-        const SizedBox(height: 20),
-        _buildForm(),
-      ],
+  Widget _buildFixedLayout(double baseWidth, double baseHeight) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Row(
+        children: [
+          Expanded(flex: 520, child: _buildLeftPanel()),
+          Expanded(flex: 1000, child: _buildRightPanel()),
+        ],
+      ),
     );
   }
 
@@ -115,8 +98,9 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
       child: Stack(
         children: [
           Positioned(right: 60, top: 80, child: _buildBackButton()),
-          Positioned(left: 60, top: 140, child: _buildLogoAndTitle()),
-          Positioned(left: 60, top: 250, child: _buildForm()),
+          Positioned(left: 60, top: 80, child: _buildLogoAndTitle()),
+          Positioned(left: 60, top: 200, child: _buildForm()),
+          Positioned(left: 60, top: 540, child: _buildContinueButton()),
         ],
       ),
     );
@@ -133,7 +117,10 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildLogoAndTitle() {
-    return const custom.AppLogo();
+    return const custom.AppLogo(
+      width: 109.09,
+      height: 40,
+    );
   }
 
   List<SocialIconData> _getSocialIcons() {
@@ -154,8 +141,6 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
         _buildPasswordField(),
         const SizedBox(height: 12),
         _buildCheckboxes(),
-        const SizedBox(height: 12),
-        _buildContinueButton(),
       ],
     );
   }
@@ -183,223 +168,81 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildEmailField() {
-    return Container(
-      width: 300,
-      height: 55,
-      decoration: BoxDecoration(
-        color: AppConstants.inputBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: TextFormField(
-        controller: _emailController,
-        onChanged: (value) {
-          setState(() {
-            _isEmailValid = validateEmail(value) == null;
-          });
-        },
-        style: const TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Digite seu e-mail',
-          hintStyle: const TextStyle(
-            color: AppConstants.textLightGray,
-            fontSize: 17,
-          ),
-          prefixIcon: const Icon(
-            Icons.email,
-            color: AppConstants.accentGreen,
-            size: 24,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
-        ),
-      ),
+    return AppEmailField(
+      controller: _emailController,
+      hintText: 'Digite seu e-mail',
+      onChanged: (value) {
+        setState(() {
+          _isEmailValid = validateEmail(value) == null;
+        });
+      },
     );
   }
 
   Widget _buildNameField() {
-    return Container(
-      width: 300,
-      height: 55,
-      decoration: BoxDecoration(
-        color: AppConstants.inputBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: TextFormField(
-        controller: _usuarioController,
-        onChanged: (value) {
-          setState(() {
-            _isUsuarioValid = validateRequired(value, 'Nome de usuário') == null;
-          });
-        },
-        style: const TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Digite seu nome de usuário',
-          hintStyle: const TextStyle(
-            color: AppConstants.textLightGray,
-            fontSize: 17,
-          ),
-          prefixIcon: const Icon(
-            Icons.person,
-            color: AppConstants.accentGreen,
-            size: 24,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
-        ),
-      ),
+    return AppNameField(
+      controller: _usuarioController,
+      hintText: 'Digite seu nome de usuário',
+      onChanged: (value) {
+        setState(() {
+          _isUsuarioValid = validateRequired(value, 'Nome de usuário') == null;
+        });
+      },
     );
   }
 
   Widget _buildPasswordField() {
-    return Container(
-      width: 300,
-      height: 55,
-      decoration: BoxDecoration(
-        color: AppConstants.inputBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: TextFormField(
-        controller: _senhaController,
-        obscureText: true,
-        onChanged: (value) {
-          setState(() {
-            _isSenhaValid = validatePassword(value) == null;
-          });
-        },
-        style: const TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Digite sua senha',
-          hintStyle: const TextStyle(
-            color: AppConstants.textLightGray,
-            fontSize: 17,
-          ),
-          prefixIcon: const Icon(
-            Icons.lock,
-            color: AppConstants.accentGreen,
-            size: 24,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
-        ),
-      ),
+    return AppPasswordField(
+      controller: _senhaController,
+      hintText: 'Digite sua senha',
+      onChanged: (value) {
+        setState(() {
+          _isSenhaValid = validatePassword(value) == null;
+        });
+      },
     );
   }
 
   Widget _buildCpfField() {
-    return Container(
-      width: 300,
-      height: 55,
-      decoration: BoxDecoration(
-        color: AppConstants.inputBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: TextFormField(
-        controller: _cpfController,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          setState(() {
-            _isCpfValid = validateCPF(value) == null;
-          });
-          final formatted = formatCPF(value);
-          if (formatted != value) {
-            _cpfController.value = TextEditingValue(
-              text: formatted,
-              selection: TextSelection.collapsed(offset: formatted.length),
-            );
-          }
-        },
-        style: const TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Digite seu CPF',
-          hintStyle: const TextStyle(
-            color: AppConstants.textLightGray,
-            fontSize: 17,
-          ),
-          prefixIcon: const Icon(
-            Icons.badge,
-            color: AppConstants.accentGreen,
-            size: 24,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
-        ),
-      ),
+    return AppCpfField(
+      controller: _cpfController,
+      hintText: 'Digite seu CPF',
+      onChanged: (value) {
+        setState(() {
+          _isCpfValid = validateCPF(value) == null;
+        });
+      },
+      formatter: formatCPF,
     );
   }
 
   Widget _buildDateField() {
-    return Container(
-      width: 300,
-      height: 55,
-      decoration: BoxDecoration(
-        color: AppConstants.inputBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: TextFormField(
-        controller: _dataController,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-          setState(() {
-            _isDataValid = validateDate(value) == null;
-          });
-          final formatted = formatDate(value);
-          if (formatted != value) {
-            _dataController.value = TextEditingValue(
-              text: formatted,
-              selection: TextSelection.collapsed(offset: formatted.length),
-            );
-          }
-        },
-        style: const TextStyle(
-          color: AppConstants.textWhite,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Digite sua data de nascimento',
-          hintStyle: const TextStyle(
-            color: AppConstants.textLightGray,
-            fontSize: 17,
-          ),
-          prefixIcon: const Icon(
-            Icons.calendar_today,
-            color: AppConstants.accentGreen,
-            size: 24,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(15),
-        ),
-      ),
+    return AppDateField(
+      controller: _dataController,
+      hintText: 'Digite sua data de nascimento',
+      onChanged: (value) {
+        setState(() {
+          _isDataValid = validateDate(value) == null;
+        });
+      },
+      formatter: formatDate,
     );
   }
 
   Widget _buildCheckboxes() {
     return SizedBox(
-      width: 300,
+      width: 350,
       child: Column(
         children: [
           _buildCheckbox(
             value: _aceitaTermos,
             onChanged: (value) => setState(() => _aceitaTermos = value ?? false),
-            text: 'Aceito os ',
-            termsLink: true,
+            text: 'Concordo com os Termos de Serviços e a Política de Privacidade',
           ),
-          const SizedBox(height: 6),
           _buildCheckbox(
             value: _maiorIdade,
             onChanged: (value) => setState(() => _maiorIdade = value ?? false),
-            text: 'Confirmo que sou maior de idade',
+            text: 'Eu declaro ter 18 anos ou mais',
           ),
         ],
       ),
@@ -412,46 +255,12 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
     required String text,
     bool termsLink = false,
   }) {
-    return Row(
-      children: [
-        Checkbox(
-          value: value,
-          onChanged: onChanged,
-          activeColor: AppConstants.accentGreen,
-          checkColor: AppConstants.primaryBackground,
-        ),
-        Expanded(
-          child: termsLink 
-            ? SizedBox(
-                width: 250,
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      color: AppConstants.textWhite,
-                      fontSize: 14,
-                    ),
-                    children: [
-                      TextSpan(text: text),
-                      TextSpan(
-                        text: 'termos de uso',
-                        style: const TextStyle(
-                          color: AppConstants.accentGreen,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : Text(
-                text,
-                style: const TextStyle(
-                  color: AppConstants.textWhite,
-                  fontSize: 14,
-                ),
-              ),
-        ),
-      ],
+    return AppCheckbox(
+      value: value,
+      onChanged: onChanged,
+      text: text,
+      termsLink: termsLink,
+      width: 300,
     );
   }
 

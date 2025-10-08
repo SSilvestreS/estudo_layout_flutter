@@ -106,7 +106,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
       child: Stack(
         children: [
           Positioned(right: 60, top: 80, child: _buildBackButton()),
-          Positioned(left: 60, top: 140, child: _buildLogoOnly()),
+          Positioned(left: 60, top: 80, child: _buildLogoOnly()),
           Positioned(left: 60, top: 250, child: _buildTitle()),
           Positioned(left: 60, top: 320, child: _buildEmailField()),
           Positioned(left: 60, top: 390, child: _buildSendButton()),
@@ -126,7 +126,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
   }
 
   Widget _buildLogoOnly() {
-    return const custom.AppLogo();
+    return const custom.AppLogo(
+      width: 109.09,
+      height: 40,
+    );
   }
 
   Widget _buildTitle() {
@@ -142,8 +145,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
 
   Widget _buildEmailField() {
     return Container(
-      width: 300,
-      height: 50,
+      width: 380,
+      height: 48,
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
         borderRadius: BorderRadius.circular(6),
@@ -158,13 +161,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
         },
         style: const TextStyle(
           color: AppConstants.textWhite,
-          fontSize: 17,
+          fontSize: 14,
         ),
         decoration: const InputDecoration(
           hintText: 'Digite seu e-mail',
           hintStyle: TextStyle(
             color: AppConstants.textLightGray,
-            fontSize: 17,
+            fontSize: 14,
           ),
           prefixIcon: Icon(
             Icons.email,

@@ -1,6 +1,356 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
+class AppEmailField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final void Function(String)? onChanged;
+  final bool enabled;
+  final double? width;
+  final double? height;
+
+  const AppEmailField({
+    super.key,
+    required this.controller,
+    this.hintText = 'Digite seu e-mail',
+    this.onChanged,
+    this.enabled = true,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width ?? 350,
+      height: height ?? 40,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: controller,
+        enabled: enabled,
+        keyboardType: TextInputType.emailAddress,
+        onChanged: onChanged,
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 15,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 15,
+          ),
+          prefixIcon: const Icon(
+            Icons.email,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+}
+
+class AppNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final void Function(String)? onChanged;
+  final double? width;
+  final double? height;
+
+  const AppNameField({
+    super.key,
+    required this.controller,
+    this.hintText = 'Digite seu nome de usuário',
+    this.onChanged,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width ?? 350,
+      height: height ?? 40,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: controller,
+        onChanged: onChanged,
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 15,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 15,
+          ),
+          prefixIcon: const Icon(
+            Icons.person,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+}
+
+class AppCpfField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final void Function(String)? onChanged;
+  final String Function(String)? formatter;
+  final double? width;
+  final double? height;
+
+  const AppCpfField({
+    super.key,
+    required this.controller,
+    this.hintText = 'Digite seu CPF',
+    this.onChanged,
+    this.formatter,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width ?? 350,
+      height: height ?? 40,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onChanged?.call(value);
+          if (formatter != null) {
+            final formatted = formatter!(value);
+            if (formatted != value) {
+              controller.value = TextEditingValue(
+                text: formatted,
+                selection: TextSelection.collapsed(offset: formatted.length),
+              );
+            }
+          }
+        },
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 15,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 15,
+          ),
+          prefixIcon: const Icon(
+            Icons.badge,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+}
+
+class AppDateField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final void Function(String)? onChanged;
+  final String Function(String)? formatter;
+  final double? width;
+  final double? height;
+
+  const AppDateField({
+    super.key,
+    required this.controller,
+    this.hintText = 'Digite sua data de nascimento',
+    this.onChanged,
+    this.formatter,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width ?? 350,
+      height: height ?? 40,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          onChanged?.call(value);
+          if (formatter != null) {
+            final formatted = formatter!(value);
+            if (formatted != value) {
+              controller.value = TextEditingValue(
+                text: formatted,
+                selection: TextSelection.collapsed(offset: formatted.length),
+              );
+            }
+          }
+        },
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 15,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 15,
+          ),
+          prefixIcon: const Icon(
+            Icons.calendar_today,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+}
+
+class AppPasswordField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final void Function(String)? onChanged;
+  final double? width;
+  final double? height;
+
+  const AppPasswordField({
+    super.key,
+    required this.controller,
+    this.hintText = 'Digite sua senha',
+    this.onChanged,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width ?? 350,
+      height: height ?? 40,
+      decoration: BoxDecoration(
+        color: AppConstants.inputBackground,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: true,
+        onChanged: onChanged,
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 15,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 15,
+          ),
+          prefixIcon: const Icon(
+            Icons.lock,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+        ),
+      ),
+    );
+  }
+}
+
+class AppCheckbox extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+  final String text;
+  final bool termsLink;
+  final double? width;
+
+  const AppCheckbox({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.text,
+    this.termsLink = false,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
+          activeColor: AppConstants.accentGreen,
+          checkColor: AppConstants.primaryBackground,
+        ),
+        Expanded(
+          child: termsLink 
+            ? SizedBox(
+                width: width ?? 300,
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      color: AppConstants.textWhite,
+                      fontSize: 10,
+                    ),
+                    children: [
+                      TextSpan(text: text),
+                      TextSpan(
+                        text: 'termos de uso',
+                        style: const TextStyle(
+                          color: AppConstants.accentGreen,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : Text(
+                text,
+                style: const TextStyle(
+                  color: AppConstants.textWhite,
+                  fontSize: 10,
+                ),
+              ),
+        ),
+      ],
+    );
+  }
+}
+
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -75,8 +425,10 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final double? width;
+  final double? height;
   final Color? backgroundColor;
   final Color? textColor;
+  final double? fontSize;
 
   const AppButton({
     super.key,
@@ -84,15 +436,17 @@ class AppButton extends StatelessWidget {
     this.onPressed,
     this.isLoading = false,
     this.width,
+    this.height,
     this.backgroundColor,
     this.textColor,
+    this.fontSize,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width ?? 180,
-      height: AppConstants.buttonHeight,
+      height: height ?? AppConstants.buttonHeight,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -114,8 +468,8 @@ class AppButton extends StatelessWidget {
               )
             : Text(
                 text,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: fontSize ?? 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
