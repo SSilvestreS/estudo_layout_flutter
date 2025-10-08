@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../mixins/validation_mixin.dart';
 import '../widgets/app_components.dart';
-import '../widgets/action_button.dart' as custom;
 import '../widgets/social_button.dart';
 import '../widgets/video_panel.dart';
 
@@ -113,11 +112,13 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildBackButton() {
-    return const custom.BackButton();
+    return AppButton.backButton(
+      onPressed: () => Navigator.pop(context),
+    );
   }
 
   Widget _buildLogoAndTitle() {
-    return const custom.AppLogo(
+    return const AppLogo(
       width: 109.09,
       height: 40,
     );
@@ -154,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
         _aceitaTermos &&
         _maiorIdade;
 
-    return custom.ActionButton.continueButton(
+    return AppButton.continueButton(
       onPressed: _handleContinue,
       isValid: isFormValid,
     );
@@ -168,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildEmailField() {
-    return AppEmailField(
+    return AppField.email(
       controller: _emailController,
       hintText: 'Digite seu e-mail',
       onChanged: (value) {
@@ -180,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildNameField() {
-    return AppNameField(
+    return AppField.name(
       controller: _usuarioController,
       hintText: 'Digite seu nome de usuário',
       onChanged: (value) {
@@ -192,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildPasswordField() {
-    return AppPasswordField(
+    return AppField.password(
       controller: _senhaController,
       hintText: 'Digite sua senha',
       onChanged: (value) {
@@ -204,7 +205,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildCpfField() {
-    return AppCpfField(
+    return AppField.cpf(
       controller: _cpfController,
       hintText: 'Digite seu CPF',
       onChanged: (value) {
@@ -217,7 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidationMixin {
   }
 
   Widget _buildDateField() {
-    return AppDateField(
+    return AppField.date(
       controller: _dataController,
       hintText: 'Digite sua data de nascimento',
       onChanged: (value) {

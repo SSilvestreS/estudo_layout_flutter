@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../services/url_service.dart';
+import 'app_components.dart';
 import 'social_button.dart';
 
 class VideoPanel extends StatefulWidget {
@@ -184,59 +185,3 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
   }
 }
 
-class SocialIcon extends StatelessWidget {
-  final IconData? icon;
-  final String? imagePath;
-  final IconData? fallbackIcon;
-  final VoidCallback onTap;
-
-  const SocialIcon({
-    super.key,
-    this.icon,
-    this.imagePath,
-    this.fallbackIcon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 50, 
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(25), // 50/2
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(25), // 50/2
-          onTap: onTap,
-          child: Center(
-            child: imagePath != null
-                ? Image.asset(
-                    imagePath!,
-                    width: 28, 
-                    height: 28, 
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center, 
-                    errorBuilder: (_, __, ___) => Icon(
-                      fallbackIcon ?? Icons.link,
-                      color: AppConstants.textWhite,
-                      size: 28, 
-                    ),
-                  )
-                : Icon(
-                    icon,
-                    color: AppConstants.textWhite,
-                    size: 28, 
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-}

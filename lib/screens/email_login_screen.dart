@@ -3,9 +3,8 @@ import '../constants/app_constants.dart';
 import '../mixins/validation_mixin.dart';
 import '../widgets/app_header.dart';
 import '../widgets/app_components.dart';
-import '../widgets/video_panel.dart';
-import '../widgets/action_button.dart' as custom;
 import '../widgets/social_button.dart';
+import '../widgets/video_panel.dart';
 import 'forgot_password_screen.dart';
 
 class EmailLoginScreen extends StatefulWidget {
@@ -19,9 +18,6 @@ class EmailLoginScreen extends StatefulWidget {
 
 class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixin {
   late TextEditingController _emailController;
-  late TextEditingController _birthDateController;
-  late TextEditingController _usernameController;
-  late TextEditingController _cpfController;
   late TextEditingController _passwordController;
   bool _isPasswordValid = false;
 
@@ -29,18 +25,12 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
   void initState() {
     super.initState();
     _emailController = TextEditingController(text: widget.email);
-    _birthDateController = TextEditingController();
-    _usernameController = TextEditingController();
-    _cpfController = TextEditingController();
     _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
-    _birthDateController.dispose();
-    _usernameController.dispose();
-    _cpfController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -110,15 +100,11 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppHeader(showBackButton: true),
+        const AppHeader(showBackButton: false),
+        const SizedBox(height: 20),
+        _buildBackButton(),
         const SizedBox(height: 40),
         _buildEmailField(),
-        const SizedBox(height: 20),
-        _buildBirthDateField(),
-        const SizedBox(height: 20),
-        _buildUsernameField(),
-        const SizedBox(height: 20),
-        _buildCpfField(),
         const SizedBox(height: 20),
         _buildPasswordField(),
         const SizedBox(height: 20),
@@ -135,16 +121,13 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
       color: AppConstants.primaryBackground,
       child: Stack(
         children: [
-          Positioned(right: 60, top: 80, child: _buildBackButton()),
           Positioned(left: 60, top: 80, child: _buildLogoOnly()),
+          Positioned(right: 60, top: 80, child: _buildBackButton()),
           Positioned(left: 78, top: 200, child: _buildEmailLabel()),
           Positioned(left: 60, top: 240, child: _buildEmailField()),
-          Positioned(left: 60, top: 300, child: _buildBirthDateField()),
-          Positioned(left: 60, top: 360, child: _buildUsernameField()),
-          Positioned(left: 60, top: 420, child: _buildCpfField()),
-          Positioned(left: 60, top: 480, child: _buildPasswordField()),
-          Positioned(left: 60, top: 540, child: _buildForgotPasswordLink()),
-          Positioned(left: 60, top: 600, child: _buildLoginButton()),
+          Positioned(left: 60, top: 300, child: _buildPasswordField()),
+          Positioned(left: 60, top: 360, child: _buildForgotPasswordLink()),
+          Positioned(left: 60, top: 420, child: _buildLoginButton()),
         ],
       ),
     );
@@ -157,11 +140,13 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
   }
 
   Widget _buildBackButton() {
-    return const custom.BackButton();
+    return AppButton.backButton(
+      onPressed: () => Navigator.pop(context),
+    );
   }
 
   Widget _buildLogoOnly() {
-    return const custom.AppLogo(
+    return const AppLogo(
       width: 109.09,
       height: 40,
     );
@@ -190,41 +175,6 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
     );
   }
 
-  Widget _buildBirthDateField() {
-    return SizedBox(
-      width: 380,
-      child: AppTextField(
-        controller: _birthDateController,
-        hintText: 'DD/MM/AAAA',
-        prefixIcon: Icons.calendar_today,
-        keyboardType: TextInputType.datetime,
-      ),
-    );
-  }
-
-  Widget _buildUsernameField() {
-    return SizedBox(
-      width: 380,
-      child: AppTextField(
-        controller: _usernameController,
-        hintText: 'Digite seu usuário',
-        prefixIcon: Icons.person,
-      ),
-    );
-  }
-
-  Widget _buildCpfField() {
-    return SizedBox(
-      width: 380,
-      child: AppTextField(
-        controller: _cpfController,
-        hintText: '000.000.000-00',
-        prefixIcon: Icons.badge,
-        keyboardType: TextInputType.number,
-      ),
-    );
-  }
-
   Widget _buildPasswordField() {
     return SizedBox(
       width: 380,
@@ -247,8 +197,8 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
       width: 180,
       child: AppButton(
         text: 'Esqueci minha senha',
-        backgroundColor: Colors.transparent,
-        textColor: AppConstants.textWhite,
+        enabledColor: Colors.transparent,
+        enabledTextColor: AppConstants.textWhite,
         fontSize: 12,
         height: 36,
         onPressed: () {
@@ -262,7 +212,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> with ValidationMixi
   }
 
   Widget _buildLoginButton() {
-    return custom.ActionButton.loginButton(
+    return AppButton.loginButton(
       onPressed: _handleLogin,
       isValid: _isPasswordValid,
     );
