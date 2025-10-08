@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
+import 'action_button.dart' as custom;
 
 class AppHeader extends StatelessWidget {
   final bool showBackButton;
@@ -61,27 +62,8 @@ class AppHeader extends StatelessWidget {
   }
 
   Widget _buildBackButton(BuildContext context) {
-    return GestureDetector(
-      onTap: onBackPressed ?? () => Navigator.pop(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.arrow_back_ios, color: AppConstants.textWhite, size: 16),
-            SizedBox(width: 6),
-            Text(
-              'voltar',
-              style: TextStyle(color: AppConstants.textWhite, fontSize: 14),
-            ),
-          ],
-        ),
-      ),
+    return custom.BackButton(
+      onPressed: onBackPressed ?? () => Navigator.pop(context),
     );
   }
 }

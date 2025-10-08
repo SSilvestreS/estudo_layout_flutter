@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../services/url_service.dart';
+import 'social_button.dart';
 
 class VideoPanel extends StatefulWidget {
   final List<SocialIconData> socialIcons;
@@ -17,7 +18,7 @@ class VideoPanel extends StatefulWidget {
 }
 
 class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
-  // TODO: Adicionar vídeo futuramente
+  // TODO: adicionar video futuramente
   // Player? _mediaKitPlayer;
   // VideoController? _mediaKitVideoController;
   // VideoPlayerController? _videoPlayerController;
@@ -49,17 +50,18 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
     _animationController.repeat(reverse: true);
   }
 
-  // TODO: Implementar carregamento de vídeo futuramente
+  // TODO: implementar carregamento de video futuramente
   // Future<void> _initializeVideo() async {
-  //   // Implementação do vídeo será adicionada aqui
+  //   // Implementação do vídeo vai vim aqui!!
   // }
 
   @override
   void dispose() {
     _animationController.dispose();
-    // TODO: Dispose dos controllers de vídeo quando implementado
+    // TODO: dispose dos controllers de video quando implementado
     // _mediaKitPlayer?.dispose();
     // _videoPlayerController?.dispose();
+    /// queria muito fazer essa merda funcionar, mas ta dificil pqp
     super.dispose();
   }
 
@@ -78,11 +80,9 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
         
         return Stack(
           children: [
-            // Fundo animado (futuramente será vídeo)
             Positioned.fill(
               child: _buildAnimatedPanel(),
             ),
-            // Texto "the game"
             Positioned(
               left: textLeft,
               top: textTop1,
@@ -90,13 +90,13 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
                 AppConstants.gameText,
                 style: TextStyle(
                   color: AppConstants.textWhite,
-                  fontSize: 36, // Aumentado de 28 para 36
+                  fontSize: 36,
                   fontStyle: FontStyle.italic,
                   shadows: [Shadow(offset: Offset(0, 1), blurRadius: 3, color: Colors.black54)],
                 ),
               ),
             ),
-            // Texto "FOR GAMERS"
+
             Positioned(
               left: textLeft,
               top: textTop2,
@@ -104,13 +104,13 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
                 AppConstants.gamersText,
                 style: TextStyle(
                   color: AppConstants.accentGreen,
-                  fontSize: 48, // Aumentado de 36 para 48
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
                   shadows: [Shadow(offset: Offset(0, 2), blurRadius: 4, color: Colors.black87)],
                 ),
               ),
             ),
-            // Ícones sociais
+
             Positioned(
               left: textLeft,
               top: iconsTop,
@@ -138,7 +138,6 @@ class _VideoPanelState extends State<VideoPanel> with TickerProviderStateMixin {
       },
     );
   }
-
 
   Widget _buildAnimatedPanel() {
     return AnimatedBuilder(
@@ -240,18 +239,4 @@ class SocialIcon extends StatelessWidget {
       ),
     );
   }
-}
-
-class SocialIconData {
-  final IconData? icon;
-  final String? imagePath;
-  final IconData? fallbackIcon;
-  final String message;
-
-  const SocialIconData({
-    this.icon,
-    this.imagePath,
-    this.fallbackIcon,
-    required this.message,
-  });
 }

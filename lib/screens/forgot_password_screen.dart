@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../mixins/validation_mixin.dart';
-import '../widgets/app_components.dart';
 import '../widgets/app_header.dart';
 import '../widgets/video_panel.dart';
+import '../widgets/action_button.dart' as custom;
+import '../widgets/social_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -121,60 +122,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
   }
 
   Widget _buildBackButton() {
-    return GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.arrow_back_ios, color: AppConstants.textWhite, size: 16),
-            SizedBox(width: 6),
-            Text(
-              'voltar',
-              style: TextStyle(color: AppConstants.textWhite, fontSize: 14),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const custom.BackButton();
   }
 
   Widget _buildLogoOnly() {
-    return SizedBox(
-      width: 260,
-      height: 65,
-      child: Image.asset(
-        'assets/images/logo_gamersbrawl.png',
-        height: 65,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-              color: AppConstants.accentGreen,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Center(
-              child: Text(
-                'GB',
-                style: TextStyle(
-                  color: AppConstants.primaryBackground,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return const custom.AppLogo();
   }
 
   Widget _buildTitle() {
@@ -189,53 +141,56 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Valida
   }
 
   Widget _buildEmailField() {
-    return SizedBox(
+    return Container(
       width: 300,
-      child: AppTextField(
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextFormField(
         controller: _emailController,
-        hintText: 'Digite seu e-mail',
-        prefixIcon: Icons.email,
         keyboardType: TextInputType.emailAddress,
         onChanged: (value) {
           setState(() {
             _isEmailValid = validateEmail(value) == null;
           });
         },
+        style: const TextStyle(
+          color: AppConstants.textWhite,
+          fontSize: 17,
+        ),
+        decoration: const InputDecoration(
+          hintText: 'Digite seu e-mail',
+          hintStyle: TextStyle(
+            color: AppConstants.textLightGray,
+            fontSize: 17,
+          ),
+          prefixIcon: Icon(
+            Icons.email,
+            color: AppConstants.accentGreen,
+            size: 24,
+          ),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          focusedErrorBorder: InputBorder.none,
+          contentPadding: EdgeInsets.all(15),
+        ),
       ),
     );
   }
 
   Widget _buildSendButton() {
-    return AppButton(
-      text: 'ENVIAR',
-      onPressed: _isEmailValid ? _handleSend : null,
+    return custom.ActionButton.sendButton(
+      onPressed: _handleSend,
+      isValid: _isEmailValid,
     );
   }
 
   List<SocialIconData> _getSocialIcons() {
-    return [
-      const SocialIconData(
-        icon: Icons.camera_alt,
-        message: 'Instagram em desenvolvimento',
-      ),
-      const SocialIconData(
-        imagePath: AppConstants.discordIconPath,
-        fallbackIcon: Icons.gamepad,
-        message: 'Discord em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.close,
-        message: 'X (Twitter) em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.play_circle,
-        message: 'Twitch em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.play_arrow,
-        message: 'YouTube em desenvolvimento',
-      ),
-    ];
+    return SocialIconData.getDefaultSocialIcons();
   }
 
   void _handleSend() {

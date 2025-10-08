@@ -55,7 +55,7 @@ class AppTextField extends StatelessWidget {
           prefixIcon: prefixIcon != null
               ? Icon(
                   prefixIcon,
-                  color: AppConstants.textLightGray,
+                  color: AppConstants.accentGreen,
                   size: AppConstants.iconSize,
                 )
               : null,

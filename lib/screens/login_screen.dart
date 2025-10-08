@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../mixins/validation_mixin.dart';
 import '../widgets/video_panel.dart';
+import '../widgets/social_button.dart';
+import '../widgets/action_button.dart' as custom;
 import 'email_login_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -125,35 +127,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   }
 
   Widget _buildLogoAndTitle() {
-    return SizedBox(
-      width: 260,
-      height: 65,
-      child: Image.asset(
-        'assets/images/logo_gamersbrawl.png',
-        height: 65,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-              color: AppConstants.accentGreen,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Center(
-              child: Text(
-                'GB',
-                style: TextStyle(
-                  color: AppConstants.primaryBackground,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return const custom.AppLogo();
   }
 
   Widget _buildEmailField() {
@@ -183,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
           ),
           prefixIcon: const Icon(
             Icons.email,
-            color: AppConstants.textLightGray,
+            color: AppConstants.accentGreen,
             size: 24,
           ),
           border: InputBorder.none,
@@ -194,41 +168,9 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   }
 
   Widget _buildContinueButton() {
-    return SizedBox(
-      width: 180,
-      height: 45,
-      child: ElevatedButton(
-        onPressed: _isEmailValid ? _handleContinue : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _isEmailValid 
-              ? const Color(0xFF7BFF00) 
-              : const Color(0xFF555555),
-          foregroundColor: _isEmailValid 
-              ? const Color(0xFF1A0033) 
-              : const Color(0xFF999999),
-          elevation: _isEmailValid ? 2 : 0,
-          shadowColor: _isEmailValid ? const Color(0xFF7BFF00).withValues(alpha: 0.3) : Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-            side: BorderSide(
-              color: _isEmailValid 
-                  ? const Color(0xFF7BFF00) 
-                  : const Color(0xFF666666),
-              width: 1,
-            ),
-          ),
-        ),
-        child: Text(
-          'CONTINUAR',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: _isEmailValid 
-                ? const Color(0xFF1A0033) 
-                : const Color(0xFF999999),
-          ),
-        ),
-      ),
+    return custom.ActionButton.continueButton(
+      onPressed: _handleContinue,
+      isValid: _isEmailValid,
     );
   }
 
@@ -247,117 +189,19 @@ class _LoginScreenState extends State<LoginScreen> with ValidationMixin {
   }
 
   Widget _buildGoogleButton() {
-    return SizedBox(
-      width: 300,
-      height: 35,
-      child: ElevatedButton(
-        onPressed: () => _showMessage('Google em desenvolvimento'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-            side: BorderSide(
-              color: Colors.grey.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppConstants.googleIconPath,
-              width: 20,
-              height: 20,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.login, size: 20);
-              },
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Entrar com Google',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SocialButton.google(
+      onPressed: () => _showMessage('Google em desenvolvimento'),
     );
   }
 
   Widget _buildDiscordButton() {
-    return SizedBox(
-      width: 300,
-      height: 35,
-      child: ElevatedButton(
-        onPressed: () => _showMessage('Discord em desenvolvimento'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-            side: BorderSide(
-              color: Colors.grey.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppConstants.discordButtonIconPath,
-              width: 20,
-              height: 20,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.gamepad, size: 20, color: Colors.black);
-              },
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Entrar com Discord',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SocialButton.discord(
+      onPressed: () => _showMessage('Discord em desenvolvimento'),
     );
   }
 
   List<SocialIconData> _getSocialIcons() {
-    return [
-      const SocialIconData(
-        icon: Icons.camera_alt,
-        message: 'Instagram em desenvolvimento',
-      ),
-      const SocialIconData(
-        imagePath: AppConstants.discordIconPath,
-        fallbackIcon: Icons.gamepad,
-        message: 'Discord em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.close,
-        message: 'X (Twitter) em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.play_circle,
-        message: 'Twitch em desenvolvimento',
-      ),
-      const SocialIconData(
-        icon: Icons.play_arrow,
-        message: 'YouTube em desenvolvimento',
-      ),
-    ];
+    return SocialIconData.getDefaultSocialIcons();
   }
 
   void _handleContinue() {
